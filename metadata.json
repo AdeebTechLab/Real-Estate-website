@@ -1,0 +1,6 @@
+{
+  "name": "EstatePro - Real Estate Marketplace",
+  "description": "Pakistan's premier real estate marketplace for buying, renting, and listing verified properties with advanced filtering, agent directory, and local market insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
