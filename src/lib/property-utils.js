@@ -97,12 +97,10 @@ export function filterAndSortProperties(properties = [], filters = {}) {
       }
     }
 
-    // Bathrooms
+    // Bathrooms are minimums ("1+", "2+", "3+", "4+"), matching the filter labels
     if (bathrooms && bathrooms !== 'all') {
-      const bathNum = Number(bathrooms);
-      if (bathrooms === '4+' ? (property.bathrooms || 0) < 4 : property.bathrooms !== bathNum) {
-        return false;
-      }
+      const minBaths = bathrooms === '4+' ? 4 : Number(bathrooms);
+      if ((property.bathrooms || 0) < minBaths) return false;
     }
 
     // Furnishing

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react';
 
@@ -9,6 +9,14 @@ export default function ImageGallery({ images = [], title = 'Property' }) {
   const galleryImages = images && images.length > 0 ? images : [
     'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'
   ];
+
+  const safeIndex = Math.min(activeIndex, galleryImages.length - 1);
+
+  useEffect(() => {
+    if (activeIndex !== safeIndex) {
+      setActiveIndex(safeIndex);
+    }
+  }, [activeIndex, safeIndex]);
 
   const handlePrev = (e) => {
     e?.stopPropagation();
@@ -25,8 +33,8 @@ export default function ImageGallery({ images = [], title = 'Property' }) {
       {/* Main Image Stage */}
       <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full rounded-2xl overflow-hidden bg-slate-900 group">
         <Image
-          src={galleryImages[activeIndex]}
-          alt={`${title} - view ${activeIndex + 1}`}
+          src={galleryImages[safeIndex]}
+          alt={`${title} - view ${safeIndex + 1}`}
           fill
           priority
           className="object-cover"
@@ -34,7 +42,7 @@ export default function ImageGallery({ images = [], title = 'Property' }) {
 
         {/* Counter Pill */}
         <div className="absolute bottom-4 left-4 z-10 px-3 py-1 rounded-md bg-slate-950/70 backdrop-blur-xs text-white text-xs font-mono font-medium">
-          {activeIndex + 1} / {galleryImages.length}
+          {safeIndex + 1} / {galleryImages.length}
         </div>
 
         {/* Fullscreen Button */}
@@ -80,7 +88,7 @@ export default function ImageGallery({ images = [], title = 'Property' }) {
               onClick={() => setActiveIndex(idx)}
               aria-label={`View photo ${idx + 1}`}
               className={`relative shrink-0 w-20 sm:w-24 aspect-[4/3] rounded-xl overflow-hidden border-2 transition-all ${
-                activeIndex === idx
+                safeIndex === idx
                   ? 'border-emerald-600 ring-2 ring-emerald-500/30'
                   : 'border-transparent opacity-70 hover:opacity-100'
               }`}
@@ -96,7 +104,7 @@ export default function ImageGallery({ images = [], title = 'Property' }) {
         <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-8">
           <div className="flex items-center justify-between text-white">
             <span className="text-sm font-medium">
-              {title} — Photo {activeIndex + 1} of {galleryImages.length}
+              {title} — Photo {safeIndex + 1} of {galleryImages.length}
             </span>
             <button
               type="button"
@@ -110,8 +118,8 @@ export default function ImageGallery({ images = [], title = 'Property' }) {
 
           <div className="relative flex-1 max-h-[80vh] my-auto flex items-center justify-center">
             <Image
-              src={galleryImages[activeIndex]}
-              alt={`${title} - view ${activeIndex + 1}`}
+              src={galleryImages[safeIndex]}
+              alt={`${title} - view ${safeIndex + 1}`}
               className="max-h-[80vh] w-auto max-w-full object-contain rounded-lg shadow-2xl"
             />
             {galleryImages.length > 1 && (
@@ -142,8 +150,8 @@ export default function ImageGallery({ images = [], title = 'Property' }) {
                 key={idx}
                 type="button"
                 onClick={() => setActiveIndex(idx)}
-                className={`w-14 h-10 rounded overflow-hidden border-2 transition-all ${
-                  activeIndex === idx ? 'border-emerald-400' : 'border-transparent opacity-50'
+                className={`relative w-14 h-10 rounded overflow-hidden border-2 transition-all ${
+                  safeIndex === idx ? 'border-emerald-400' : 'border-transparent opacity-50'
                 }`}
               >
                 <Image src={img} alt="" fill className="object-cover" />

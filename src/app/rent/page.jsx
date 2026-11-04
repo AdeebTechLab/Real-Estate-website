@@ -19,7 +19,7 @@ export default function RentPage() {
     hasActiveFilters
   } = usePropertyFilters(allProperties, {
     listingType: 'rent'
-  });
+  }, 'rent');
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -41,6 +41,7 @@ export default function RentPage() {
         resetFilters={resetFilters}
         hasActiveFilters={hasActiveFilters}
         totalResults={totalItems}
+        listingTypeLocked
       />
 
       <PropertyGrid

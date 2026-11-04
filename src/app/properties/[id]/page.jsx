@@ -29,6 +29,7 @@ export default function PropertyDetailPage({ params: propParams }) {
   const params = propParams || hookParams;
   const router = useRouter();
   const { allProperties, isFavorite, toggleFavorite } = useFavorites();
+  const [copied, setCopied] = useState(false);
 
   const propertyId = params?.id;
   const property = allProperties.find((p) => p.id === propertyId || p.slug === propertyId);
@@ -54,8 +55,6 @@ export default function PropertyDetailPage({ params: propParams }) {
       </div>
     );
   }
-
-  const [copied, setCopied] = useState(false);
 
   const handleShare = () => {
     if (typeof window !== 'undefined' && navigator.clipboard) {
@@ -123,7 +122,7 @@ export default function PropertyDetailPage({ params: propParams }) {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Image Gallery */}
-          <ImageGallery images={property.images} title={property.title} />
+          <ImageGallery key={property.id} images={property.images} title={property.title} />
 
           {/* Heading & Price Summary */}
           <div className="space-y-4 border-b border-slate-200 pb-6">
@@ -280,6 +279,7 @@ export default function PropertyDetailPage({ params: propParams }) {
 
           {/* Inquiry Form */}
           <InquiryForm
+            key={property.id}
             propertyTitle={property.title}
             agentName={agent.name}
           />

@@ -18,7 +18,7 @@ const INITIAL_FILTERS = {
   sortBy: 'newest'
 };
 
-export function usePropertyFilters(properties = [], initialOverrides = {}) {
+export function usePropertyFilters(properties = [], initialOverrides = {}, lockedListingType = null) {
   const [filters, setFilters] = useState(() => ({
     ...INITIAL_FILTERS,
     ...initialOverrides
@@ -30,9 +30,11 @@ export function usePropertyFilters(properties = [], initialOverrides = {}) {
   const updateFilter = useCallback((key, value) => {
     setFilters((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
+      // A new city has a different neighborhood list, so the previous area cannot stay selected.
+      ...(key === 'city' ? { neighborhood: 'all' } : {})
     }));
-    setCurrentPage(1); // Reset page on filter change
+    setCurrentPage(1);
   }, []);
 
   const setMultipleFilters = useCallback((newFilters) => {
@@ -46,10 +48,10 @@ export function usePropertyFilters(properties = [], initialOverrides = {}) {
   const resetFilters = useCallback(() => {
     setFilters({
       ...INITIAL_FILTERS,
-      ...initialOverrides
+      ...(lockedListingType ? { listingType: lockedListingType } : {})
     });
     setCurrentPage(1);
-  }, [initialOverrides]);
+  }, [lockedListingType]);
 
   const filteredProperties = useMemo(() => {
     return filterAndSortProperties(properties, filters);
@@ -65,7 +67,7 @@ export function usePropertyFilters(properties = [], initialOverrides = {}) {
       (filters.city && filters.city !== 'all') ||
       (filters.neighborhood && filters.neighborhood !== 'all') ||
       (filters.propertyType && filters.propertyType !== 'all') ||
-      (filters.listingType && filters.listingType !== 'all' && (!initialOverrides.listingType || filters.listingType !== initialOverrides.listingType)) ||
+      (filters.listingType && filters.listingType !== 'all' && filters.listingType !== lockedListingType && (!initialOverrides.listingType || filters.listingType !== initialOverrides.listingType)) ||
       filters.minPrice !== '' ||
       filters.maxPrice !== '' ||
       filters.bedrooms !== 'all' ||
@@ -74,7 +76,7 @@ export function usePropertyFilters(properties = [], initialOverrides = {}) {
       filters.minSize !== '' ||
       filters.maxSize !== ''
     );
-  }, [filters, initialOverrides]);
+  }, [filters, initialOverrides, lockedListingType]);
 
   return {
     filters,

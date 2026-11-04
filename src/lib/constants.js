@@ -8,7 +8,7 @@ export const CITIES = [
 ];
 
 export const NEIGHBORHOODS_BY_CITY = {
-  Lahore: ['DHA Phase 5', 'DHA Phase 6', 'Gulberg III', 'Model Town', 'Bahria Town Sector C', 'Johar Town', 'Askari 11'],
+  Lahore: ['DHA Phase 5', 'DHA Phase 6', 'Gulberg III', 'Model Town', 'Bahria Town Sector C', 'Johar Town', 'Askari 11', 'Bedian Road'],
   Islamabad: ['Sector F-6', 'Sector F-7', 'Sector F-8', 'Sector E-7', 'Bahria Enclave', 'DHA Phase 2', 'Bani Gala'],
   Karachi: ['Clifton Block 4', 'DHA Phase 8', 'DHA Phase 6', 'Gulshan-e-Iqbal Block 13', 'PECHS Block 2', 'KDA Scheme 1'],
   Rawalpindi: ['Bahria Town Phase 8', 'Chaklala Scheme 3', 'Saddar', 'Westridge 1', 'Top City-1'],

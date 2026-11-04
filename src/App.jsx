@@ -64,7 +64,7 @@ function RouteDispatcher() {
 
   return (
     <RootLayout>
-      <Component params={params} />
+      <Component key={pathname} params={params} />
     </RootLayout>
   );
 }

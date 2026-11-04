@@ -145,7 +145,7 @@ export function FavoritesProvider({ children }) {
   const value = useMemo(() => ({
     favoriteIds,
     favoriteProperties,
-    favoritesCount: favoriteIds.length,
+    favoritesCount: favoriteProperties.length,
     toggleFavorite,
     isFavorite,
     allProperties,

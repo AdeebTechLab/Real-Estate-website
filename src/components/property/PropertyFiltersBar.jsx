@@ -7,7 +7,8 @@ export default function PropertyFiltersBar({
   updateFilter,
   resetFilters,
   hasActiveFilters,
-  totalResults = 0
+  totalResults = 0,
+  listingTypeLocked = false
 }) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -43,10 +44,7 @@ export default function PropertyFiltersBar({
           <select
             id="city-select"
             value={filters.city || 'all'}
-            onChange={(e) => {
-              updateFilter('city', e.target.value);
-              updateFilter('neighborhood', 'all');
-            }}
+            onChange={(e) => updateFilter('city', e.target.value)}
             className="w-full px-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition-colors"
           >
             <option value="all">All Cities (Pakistan)</option>
@@ -77,8 +75,9 @@ export default function PropertyFiltersBar({
           <select
             aria-label="Listing transaction type"
             value={filters.listingType || 'all'}
+            disabled={listingTypeLocked}
             onChange={(e) => updateFilter('listingType', e.target.value)}
-            className="flex-1 px-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition-colors"
+            className="flex-1 px-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition-colors disabled:opacity-70"
           >
             {LISTING_TYPES.map((l) => (
               <option key={l.id} value={l.id}>{l.label}</option>

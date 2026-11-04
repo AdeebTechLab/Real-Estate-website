@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useFavorites } from '../../context/FavoritesContext.jsx';
 import { usePropertyFilters } from '../../hooks/usePropertyFilters.js';
 import PropertyFiltersBar from '../../components/property/PropertyFiltersBar.jsx';
@@ -7,6 +7,7 @@ import PropertyGrid from '../../components/property/PropertyGrid.jsx';
 
 export default function PropertiesPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { allProperties } = useFavorites();
 
   const initialCity = searchParams.get('city') || 'all';
@@ -18,7 +19,7 @@ export default function PropertiesPage() {
     filters,
     updateFilter,
     setMultipleFilters,
-    resetFilters,
+    resetFilters: clearFilters,
     filteredProperties,
     paginatedListings,
     currentPage,
@@ -33,23 +34,23 @@ export default function PropertiesPage() {
     searchQuery: initialQ
   });
 
-  // Sync when query params change in the URL
+  // Keep filters aligned with the URL, including when a query is removed.
   useEffect(() => {
-    const city = searchParams.get('city');
-    const type = searchParams.get('type');
-    const propType = searchParams.get('propertyType');
-    const q = searchParams.get('q');
-
-    const overrides = {};
-    if (city) overrides.city = city;
-    if (type) overrides.listingType = type;
-    if (propType) overrides.propertyType = propType;
-    if (q) overrides.searchQuery = q;
-
-    if (Object.keys(overrides).length > 0) {
-      setMultipleFilters(overrides);
-    }
+    setMultipleFilters({
+      city: searchParams.get('city') || 'all',
+      listingType: searchParams.get('type') || 'all',
+      propertyType: searchParams.get('propertyType') || 'all',
+      searchQuery: searchParams.get('q') || '',
+      neighborhood: 'all'
+    });
   }, [searchParams, setMultipleFilters]);
+
+  const resetFilters = () => {
+    clearFilters();
+    if (searchParams.toString()) {
+      router.replace('/properties');
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

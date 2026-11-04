@@ -10,7 +10,21 @@ export function RouterProvider({ children, initialPath = window.location.pathnam
     return initialPath;
   });
 
-  const [routeParams, setRouteParams] = useState({});
+  const [routeParams, setRouteParamsState] = useState({});
+
+  const setRouteParams = useCallback((next = {}) => {
+    setRouteParamsState((prev) => {
+      const prevKeys = Object.keys(prev);
+      const nextKeys = Object.keys(next);
+      if (
+        prevKeys.length === nextKeys.length &&
+        nextKeys.every((key) => prev[key] === next[key])
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -96,22 +110,26 @@ export function RouterProvider({ children, initialPath = window.location.pathnam
 
 export function useRouter() {
   const ctx = useContext(RouterContext);
-  if (!ctx) {
+  return useMemo(() => {
+    if (!ctx) {
+      return {
+        push: (url) => { window.location.href = url; },
+        replace: (url) => { window.location.replace(url); },
+        back: () => { window.history.back(); },
+        forward: () => { window.history.forward(); },
+        refresh: () => { window.location.reload(); },
+        setRouteParams: () => {}
+      };
+    }
     return {
-      push: (url) => { window.location.href = url; },
-      replace: (url) => { window.location.replace(url); },
-      back: () => { window.history.back(); },
-      forward: () => { window.history.forward(); },
-      refresh: () => { window.location.reload(); }
+      push: ctx.push,
+      replace: ctx.replace,
+      back: ctx.back,
+      forward: ctx.forward,
+      refresh: ctx.refresh,
+      setRouteParams: ctx.setRouteParams
     };
-  }
-  return {
-    push: ctx.push,
-    replace: ctx.replace,
-    back: ctx.back,
-    forward: ctx.forward,
-    refresh: ctx.refresh
-  };
+  }, [ctx]);
 }
 
 export function usePathname() {
